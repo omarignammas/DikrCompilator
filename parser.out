@@ -1,0 +1,63 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> text
+Rule 1     text -> words
+Rule 2     words -> words WORD
+Rule 3     words -> WORD
+
+Terminals, with rules where they appear
+
+WORD                 : 2 3
+error                : 
+
+Nonterminals, with rules where they appear
+
+text                 : 0
+words                : 1 2
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . text
+    (1) text -> . words
+    (2) words -> . words WORD
+    (3) words -> . WORD
+
+    WORD            shift and go to state 3
+
+    text                           shift and go to state 1
+    words                          shift and go to state 2
+
+state 1
+
+    (0) S' -> text .
+
+
+
+state 2
+
+    (1) text -> words .
+    (2) words -> words . WORD
+
+    $end            reduce using rule 1 (text -> words .)
+    WORD            shift and go to state 4
+
+
+state 3
+
+    (3) words -> WORD .
+
+    WORD            reduce using rule 3 (words -> WORD .)
+    $end            reduce using rule 3 (words -> WORD .)
+
+
+state 4
+
+    (2) words -> words WORD .
+
+    WORD            reduce using rule 2 (words -> words WORD .)
+    $end            reduce using rule 2 (words -> words WORD .)
+

@@ -27,7 +27,7 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> text","S'",1,None,None,None),
-  ('text -> words','text',1,'p_text','DikrCo.py',38),
-  ('words -> words WORD','words',2,'p_words','DikrCo.py',42),
-  ('words -> WORD','words',1,'p_words','DikrCo.py',43),
+  ('text -> words','text',1,'p_text','DikrCo.py',82),
+  ('words -> words WORD','words',2,'p_words','DikrCo.py',86),
+  ('words -> WORD','words',1,'p_words','DikrCo.py',87),
 ]

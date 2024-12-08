@@ -7,6 +7,9 @@ import random
 from datetime import datetime
 import pandas as pd
 import json
+import os
+
+
 
 
 # Verset correct d'Ayat al-Kursi
@@ -206,28 +209,34 @@ def show_statistics():
         st.error("Aucune donnée de lecture disponible.")
 
 
+# Chemin du fichier de log
+log_file = "readings_log.json"
+
+# Fonction pour journaliser la récitation dans le fichier JSON
 def log_reading():
-    # Charger les données existantes
-    try:
-        with open("readings_log.json", "r") as f:
-            readings = json.load(f)
-    except FileNotFoundError:
-        readings = []
+    # Récupérer l'heure actuelle au format ISO
+    now = datetime.now().isoformat()  # Formater l'heure au format ISO 8601
 
-    # Ajouter une nouvelle lecture
-    readings.append({"timestamp": datetime.now().isoformat()})
+    # Si le fichier de log n'existe pas, le créer avec une liste vide
+    if not os.path.exists(log_file):
+        with open(log_file, "w") as f:
+            json.dump([], f)
 
-    # Enregistrer les données mises à jour
-    with open("readings_log.json", "w") as f:
-        json.dump(readings, f)
+    # Lire les entrées existantes
+    with open(log_file, "r") as f:
+        log_data = json.load(f)
 
-# Mode Apprentissage avec reconnaissance vocale
-def learning_mode_with_audio():
+    # Ajouter un nouvel enregistrement avec le timestamp actuel
+    log_data.append({"timestamp": now})
+
+    # Sauvegarder les nouvelles entrées dans le fichier
+    with open(log_file, "w") as f:
+        json.dump(log_data, f, indent=4)
+def learning_mode_with_audio(completed_repetitions):
     st.title("Mode Apprentissage")
     st.write("Ce mode vous aide à apprendre Ayat al-Kursi grâce à la récitation et à la reconnaissance vocale.")
 
-    repetition_count = st.number_input("Nombre de répétitions :", min_value=1, max_value=10, value=3)
-    completed_repetitions = 0
+
 
     def process_audio_apprentissage():
         recognizer = sr.Recognizer()
@@ -273,13 +282,24 @@ def learning_mode_with_audio():
     elif completed_repetitions > 0:
         st.info("Continuez à pratiquer pour perfectionner votre récitation.")
 
-
-        
 page = st.sidebar.selectbox("Naviguer vers :", ["Accueil","DikrBot", "Apprentissage", "Statistiques des lectures"])
 
 if page == "Accueil":
     # Interface Streamlit
-   st.title("Dikr Bot - Ayat al-Kursi ")
+   st.title("Dikr Compiler - Ayat al-Kursi ") 
+   image_path = 'Dikrco.webp'
+    # Affichage de l'image
+   st.image(image_path, caption='', use_container_width=True)
+
+    # Ajouter une CSS pour ajuster la largeur et la hauteur
+   st.markdown(f"""
+    <style>
+        .stImage img {{
+            width: 200px;
+            height: 200px;
+        }}
+    </style>
+    """, unsafe_allow_html=True)
    mode = st.selectbox("Choisissez le mode d'entrée :", ("Texte", "Audio"))
 
    if mode == "Texte":
@@ -352,67 +372,50 @@ if page == "Accueil":
 elif page == "Apprentissage":
     st.title("Mode Apprentissage")
     # Contenu de la section d'apprentissage
+    repetition_count = st.number_input("Nombre de répétitions :", min_value=1, max_value=10, value=3)
+    completed_repetitions = 0
     if st.button("Commencer l'apprentissage"):
-        learning_mode_with_audio()
+        learning_mode_with_audio(completed_repetitions)
 elif page == "Statistiques des lectures":
     st.title("Statistiques des lectures")
     show_statistics()
 
 elif page == "DikrBot":
-    st.markdown("""
-    <style>
-       body {
-    font-family: 'Times New Roman', serif; /* Changer la police par 'Times New Roman' */
-    color: #FFFFFF; /* Couleur blanche pour tout le texte */
-    
-    }
+    st.markdown(
+        """
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <style>
+            .title-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 20px;
+            }
+            .title {
+                font-size: 30px;
+                font-weight: bold;
+                color: #FFFFFF;
+                margin-right: 15px;
+            }
+            lottie-player {
+                width: 50px;
+                height: 50px;
+            }
+        </style>
+        <div class="title-container">
+            <div class="title">Dikr Bot - مساعدك لآيات الذكر</div>
+            <lottie-player
+                src="https://assets9.lottiefiles.com/private_files/lf30_editor_40zqjokg.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay>
+            </lottie-player>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-    .title {
-    font-size: 30px;
-    font-weight: bold;
-    text-align: center;
-    color: #FFFFFF; /* Couleur blanche pour le titre */
-    margin-top: 20px;
-    }
-        .chat-container {
-            border: 2px solid #DDD;
-            padding: 10px;
-            border-radius: 10px;
-            background-color: #FFFFFF;
-        }
-        .chat-box {
-            background-color: #FFFFFF;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-        .user-message {
-            background-color: #E9ECEF;
-        }
-        .assistant-message {
-            background-color: #E9ECEF;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #888;
-        }
-        /* Style de l'image */
-        .image-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .image-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # Affichage du titre avec le style personnalisé
-    st.markdown('<div class="title">Dikr Bot - مساعدك لآيات الذكر</div>', unsafe_allow_html=True)
 
     st.markdown("---")
 
@@ -489,12 +492,12 @@ elif page == "DikrBot":
     recognizer = sr.Recognizer()
 
     # Function to capture speech and convert to text
-def recognize_speech():
+    def recognize_speech():
     # Créer des conteneurs pour les messages "Listening..." et "Processing..."
-    listening_message = st.empty()
-    processing_message = st.empty()
+     listening_message = st.empty()
+     processing_message = st.empty()
     
-    with sr.Microphone() as source:
+     with sr.Microphone() as source:
         # Afficher le message Listening
         listening_message.markdown(f'<div style="width: 715px; background-color: #5F9EA0; color: white; font-weight: bold; padding: 15px; border-radius: 8px; margin: 10px; text-align: center;">Listening...</div>', unsafe_allow_html=True)
         
@@ -533,14 +536,14 @@ def recognize_speech():
             st.markdown(f'<div style="width: 715px; background-color: #ff8f66; color: white; font-weight: bold; padding: 30px; border-radius: 8px; margin: 10px; text-align: center;">Request failed; please check your internet connection.</div>', unsafe_allow_html=True)
             return ""
         
-# Initialiser l'état de session pour l'historique des messages
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+    # Initialiser l'état de session pour l'historique des messages
+    if "messages" not in st.session_state:
+     st.session_state.messages = []
 
 
 # Créer un conteneur principal pour contrôler la largeur
-with st.container():
-    for message in st.session_state.messages:
+    with st.container(): 
+     for message in st.session_state.messages:
         # Utiliser un conteneur avec une largeur spécifiée pour l'affichage
         st.markdown(
             f'<div style="width: 700px; background-color: #808080; padding: 15px; border-radius: 8px; margin: 10px; color: white;">{message["content"]}</div>',
@@ -553,9 +556,9 @@ with st.container():
     # Créer un conteneur horizontal pour le bouton et l'entrée de texte
     col1, col2 = st.columns([1,4])  # Ajustez les proportions pour modifier la largeur des colonnes
 
-with col1:
+    with col1:
     # Bouton de reconnaissance vocale
-    if st.button("Voice Record"):
+     if st.button("Voice Record"):
         user_query = recognize_speech()
         user_input = user_query.strip().lower()
         if user_input:
@@ -590,8 +593,8 @@ with col1:
             st.session_state.messages.append({"role": "assistant", "content": response})
 
 
-with col2:
-    user_input = st.chat_input("ما الذي تريد أن تعرفه ؟")
+    with col2:
+     user_input = st.chat_input("ما الذي تريد أن تعرفه ؟")
 
     if user_input:
         # Ajouter le message utilisateur
@@ -617,9 +620,9 @@ with col2:
         )
 
        # Affichage progressif de la réponse
-def display_progressive_response(response, placeholder):
-    full_response = ""
-    for word in response.split():
+    def display_progressive_response(response, placeholder):
+     full_response = ""
+     for word in response.split():
         full_response += word + " "
         time.sleep(0.08)  # Simuler un délai de saisie
         placeholder.markdown(
@@ -631,10 +634,10 @@ def display_progressive_response(response, placeholder):
         )
 
     # Ajouter la réponse à l'historique une seule fois
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+        if "messages" not in st.session_state:
+         st.session_state.messages = []
     
-    st.session_state.messages.append({"role": "assistant", "content": full_response})
+     st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 
 

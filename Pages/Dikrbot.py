@@ -27,7 +27,7 @@ def DikrBot():
             }
         </style>
         <div class="title-container">
-            <div class="title">Dikr Bot - مساعدك لآيات الذكر</div>
+            <div class="title">⚪ Dikr Bot - 🤖ساعدك لآيات الذكر</div>
             <lottie-player
                 src="https://assets9.lottiefiles.com/private_files/lf30_editor_40zqjokg.json"
                 background="transparent"

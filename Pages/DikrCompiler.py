@@ -5,7 +5,8 @@ from Methods.utils import analyze_text_with_yacc , translate_expression , phonet
 
 def DikrCompiler():
     # Interface Streamlit
-   st.title("Dikr Compiler - Ayat al-Kursi ") 
+   st.title("🟢 Dikr Compiler - Ayat al-Kursi 🕌") 
+   st.markdown("---")
    image_path = 'Dikrco.webp'
     # Affichage de l'image
    st.image(image_path, caption='', use_container_width=True)

@@ -1,7 +1,7 @@
 import streamlit as st
 import speech_recognition as sr
 import pandas as pd
-from utils import analyze_text_with_yacc , translate_expression , phonetic_feedback , spaced_repetition , spiritual_practices_suggestions
+from Methods.utils import analyze_text_with_yacc , translate_expression , phonetic_feedback , spaced_repetition , spiritual_practices_suggestions
 
 def DikrCompiler():
     # Interface Streamlit

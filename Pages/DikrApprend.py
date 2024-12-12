@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime
 import pandas as pd
-from utils import learning_mode_with_audio 
+from Methods.utils import learning_mode_with_audio 
 
 
 def DikrApprentissage():

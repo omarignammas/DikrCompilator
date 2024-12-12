@@ -1,6 +1,6 @@
 import streamlit as st
-from utils import show_statistics
+from Methods.utils import show_statistics
 
-def DikrStatistics1():
+def DikrStatistics():
       st.title("Statistiques des lectures")
       show_statistics()
